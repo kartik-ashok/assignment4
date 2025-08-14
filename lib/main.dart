@@ -52,6 +52,11 @@ class BookFinderApp extends StatelessWidget {
             context.read<BookRepository>(),
           ),
         ),
+        Provider<GetBookDetailsUseCase>(
+          create: (context) => GetBookDetailsUseCase(
+            context.read<BookRepository>(),
+          ),
+        ),
         
         // Provider
         ChangeNotifierProvider<BookProvider>(
@@ -60,6 +65,7 @@ class BookFinderApp extends StatelessWidget {
             getFavoritesUseCase: context.read<GetFavoritesUseCase>(),
             toggleFavoriteUseCase: context.read<ToggleFavoriteUseCase>(),
             checkFavoriteUseCase: context.read<CheckFavoriteUseCase>(),
+            getBookDetailsUseCase: context.read<GetBookDetailsUseCase>(),
           ),
         ),
       ],

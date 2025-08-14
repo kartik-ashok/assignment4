@@ -1,4 +1,5 @@
 import '../models/book.dart';
+import '../models/book_details.dart';
 import '../services/book_api_service.dart';
 import '../services/database_service.dart';
 
@@ -17,6 +18,14 @@ class BookRepository {
       return await _apiService.fetchBooks(query, page: page, limit: limit);
     } catch (e) {
       throw Exception('Failed to fetch books: $e');
+    }
+  }
+
+  Future<BookDetails> fetchBookDetails(String workKey) async {
+    try {
+      return await _apiService.fetchBookDetails(workKey);
+    } catch (e) {
+      throw Exception('Failed to fetch book details: $e');
     }
   }
 

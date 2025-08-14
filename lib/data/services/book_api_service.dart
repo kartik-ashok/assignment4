@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/book.dart';
+import '../models/book_details.dart';
 
 class BookApiService {
   static const String _baseUrl = 'https://openlibrary.org';
@@ -26,6 +27,26 @@ class BookApiService {
       }
     } catch (e) {
       throw Exception('Error fetching books: $e');
+    }
+  }
+
+  Future<BookDetails> fetchBookDetails(String workKey) async {
+    // workKey example: /works/OL1257866W
+    final normalized = workKey.startsWith('/') ? workKey : '/$workKey';
+    final url = '$_baseUrl$normalized.json';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return BookDetails.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch details: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching details: $e');
     }
   }
 }

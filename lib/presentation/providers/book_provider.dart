@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../data/models/book.dart';
+import '../../data/models/book_details.dart';
 import '../../domain/usecases/search_books_usecase.dart';
 
 class BookProvider extends ChangeNotifier {
@@ -7,16 +8,19 @@ class BookProvider extends ChangeNotifier {
   final GetFavoritesUseCase _getFavoritesUseCase;
   final ToggleFavoriteUseCase _toggleFavoriteUseCase;
   final CheckFavoriteUseCase _checkFavoriteUseCase;
+  final GetBookDetailsUseCase _getBookDetailsUseCase;
 
   BookProvider({
     required FetchBooksUseCase fetchBooksUseCase,
     required GetFavoritesUseCase getFavoritesUseCase,
     required ToggleFavoriteUseCase toggleFavoriteUseCase,
     required CheckFavoriteUseCase checkFavoriteUseCase,
+    required GetBookDetailsUseCase getBookDetailsUseCase,
   }) : _fetchBooksUseCase = fetchBooksUseCase,
        _getFavoritesUseCase = getFavoritesUseCase,
        _toggleFavoriteUseCase = toggleFavoriteUseCase,
-       _checkFavoriteUseCase = checkFavoriteUseCase;
+       _checkFavoriteUseCase = checkFavoriteUseCase,
+       _getBookDetailsUseCase = getBookDetailsUseCase;
 
   // State variables
   List<BookDoc> _currentBooks = [];
@@ -38,6 +42,10 @@ class BookProvider extends ChangeNotifier {
   int get totalBooks => _totalBooks;
   bool get hasNextPage => _currentPage < _totalPages;
   bool get hasPrevPage => _currentPage > 1;
+
+  // Details state
+  BookDetails? _details;
+  BookDetails? get details => _details;
 
   // Fetch books for a specific page
   Future<void> fetchBooks(String query, {int page = 1}) async {
@@ -81,6 +89,24 @@ class BookProvider extends ChangeNotifier {
   Future<void> nextPage() async {
     if (hasNextPage) {
       await fetchBooks(_currentQuery, page: _currentPage + 1);
+    }
+  }
+
+  // Fetch book details by work key
+  Future<void> fetchBookDetails(String workKey) async {
+    try {
+      _isLoading = true;
+      _error = '';
+      _details = null;
+      notifyListeners();
+
+      final data = await _getBookDetailsUseCase.execute(workKey);
+      _details = data;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

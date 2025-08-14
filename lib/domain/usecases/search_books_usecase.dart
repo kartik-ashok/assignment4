@@ -1,4 +1,5 @@
 import '../../data/models/book.dart';
+import '../../data/models/book_details.dart';
 import '../../data/repositories/book_repository.dart';
 
 class FetchBooksUseCase {
@@ -11,6 +12,16 @@ class FetchBooksUseCase {
       return Book(docs: []);
     }
     return await _repository.fetchBooks(query, page: page, limit: limit);
+  }
+}
+
+class GetBookDetailsUseCase {
+  final BookRepository _repository;
+
+  GetBookDetailsUseCase(this._repository);
+
+  Future<BookDetails> execute(String workKey) async {
+    return await _repository.fetchBookDetails(workKey);
   }
 }
 
