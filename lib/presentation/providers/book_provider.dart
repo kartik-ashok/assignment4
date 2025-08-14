@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../data/models/book.dart';
 import '../../domain/usecases/search_books_usecase.dart';
-// import '../../domain/usecases/get_favorites_usecase.dart';
-// import '../../domain/usecases/toggle_favorite_usecase.dart';
-// import '../../domain/usecases/check_favorite_usecase.dart';
 
 class BookProvider extends ChangeNotifier {
   final FetchBooksUseCase _fetchBooksUseCase;

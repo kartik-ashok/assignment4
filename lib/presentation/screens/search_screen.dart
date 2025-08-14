@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../providers/book_provider.dart';
@@ -53,12 +54,12 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _searchController.clear();
-    
+
     // Use addPostFrameCallback to avoid calling provider methods during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = Provider.of<BookProvider>(context, listen: false);
       provider.clearBooks();
-      
+
       _searchController.addListener(() {
         if (_searchController.text.isEmpty) {
           provider.clearBooks();
@@ -74,8 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         title: Text(
           'Book Finder',
-          style: TextStyle(
-            fontSize: 20.sp,
+          style: GoogleFonts.poppins(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -84,10 +85,14 @@ class _SearchScreenState extends State<SearchScreen> {
         elevation: 0,
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite, color: Colors.white),
-            onPressed: _goToSavedBooks,
-            tooltip: 'Saved Books',
+          Padding(
+            padding: EdgeInsets.only(right: 4.w),
+
+            child: IconButton(
+              icon: const Icon(Icons.favorite, color: Colors.white),
+              onPressed: _goToSavedBooks,
+              tooltip: 'Saved Books',
+            ),
           ),
         ],
       ),
@@ -126,12 +131,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 4.w,
-                        vertical: 2.h,
+                        vertical: 1.5.h,
                       ),
                     ),
                     onSubmitted: (_) => _performSearch(),
@@ -145,11 +150,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     backgroundColor: Colors.orange[600],
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     padding: EdgeInsets.symmetric(
                       horizontal: 4.w,
-                      vertical: 2.h,
+                      vertical: 1.5.h,
                     ),
                   ),
                   child: Text(
@@ -200,7 +205,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           onPressed: () {
                             provider.clearError();
                             if (_searchController.text.trim().isNotEmpty) {
-                              provider.fetchBooks(_searchController.text.trim());
+                              provider.fetchBooks(
+                                _searchController.text.trim(),
+                              );
                             }
                           },
                           child: const Text('Retry'),
@@ -271,13 +278,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     // Results count and pagination info
                     if (provider.currentBooks.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 2.h,
+                        ),
                         child: Row(
                           children: [
                             Text(
                               'Found ${provider.totalBooks} books',
-                              style: TextStyle(
-                                fontSize: 14.sp,
+                              style: GoogleFonts.poppins(
+                                fontSize: 12.sp,
                                 color: Colors.grey[600],
                                 fontWeight: FontWeight.w500,
                               ),
@@ -285,9 +295,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             const Spacer(),
                             Text(
                               'Page ${provider.currentPage} of ${provider.totalPages}',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
-                                color: Colors.grey[500],
+                                color: Colors.grey[600],
                               ),
                             ),
                           ],
@@ -296,24 +306,47 @@ class _SearchScreenState extends State<SearchScreen> {
                     // Pagination controls
                     if (provider.totalPages > 1)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 1.h,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: provider.hasPrevPage ? _prevPage : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[600],
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                            ElevatedButton.icon(
+                              onPressed: provider.hasPrevPage
+                                  ? _prevPage
+                                  : null,
+                              icon: const Icon(Icons.arrow_back, size: 18),
+                              label: const Text(
+                                'Prev',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
                                 ),
                               ),
-                              child: const Text('Prev'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                backgroundColor: provider.hasPrevPage
+                                    ? Colors.blue[600]
+                                    : Colors.blueGrey[200],
+                                foregroundColor: Colors.white,
+                                shadowColor: Colors.black45,
+                                elevation: provider.hasPrevPage ? 4 : 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
                             ),
                             SizedBox(width: 4.w),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 3.w,
+                                vertical: 1.h,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(15),
@@ -329,15 +362,38 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                             SizedBox(width: 4.w),
                             ElevatedButton(
-                              onPressed: provider.hasNextPage ? _nextPage : null,
+                              onPressed: provider.hasNextPage
+                                  ? _nextPage
+                                  : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[600],
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                backgroundColor: provider.hasNextPage
+                                    ? Colors.blue[600]
+                                    : Colors.blueGrey[200],
                                 foregroundColor: Colors.white,
+                                shadowColor: Colors.black45,
+                                elevation: provider.hasNextPage ? 4 : 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              child: const Text('Next'),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Text(
+                                    'Next',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6),
+                                  Icon(Icons.arrow_forward, size: 18),
+                                ],
+                              ),
                             ),
                           ],
                         ),

@@ -34,8 +34,8 @@ class BookCard extends StatelessWidget {
             child: doc.coverI != null
                 ? Image.network(
                     "https://covers.openlibrary.org/b/id/${doc.coverI}-M.jpg",
-                    width: 15.w,
-                    height: 20.h,
+                    width: 30.w,
+                    // height: 20.h,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
@@ -56,8 +56,7 @@ class BookCard extends StatelessWidget {
                     },
                   )
                 : Container(
-                    width: 15.w,
-                    height: 20.h,
+                    width: 30.w,
                     color: Colors.grey[300],
                     child: const Icon(Icons.book, color: Colors.grey),
                   ),
