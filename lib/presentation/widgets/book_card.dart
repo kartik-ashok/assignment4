@@ -1,12 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:assignment4/presentation/providers/book_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../data/models/book.dart';
 
 class BookCard extends StatelessWidget {
-  final Docs doc;
+  final BookDoc doc;
 
   const BookCard({super.key, required this.doc});
 
@@ -33,26 +32,28 @@ class BookCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: doc.coverI != null
-                ? CachedNetworkImage(
-                    imageUrl:
-                        "https://covers.openlibrary.org/b/id/${doc.coverI}-M.jpg",
-                    width: 35.w,
+                ? Image.network(
+                    "https://covers.openlibrary.org/b/id/${doc.coverI}-M.jpg",
+                    width: 15.w,
+                    height: 20.h,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
                         width: 15.w,
                         height: 20.h,
                         color: Colors.grey[300],
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      width: 15.w,
-                      height: 20.h,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.error, color: Colors.grey),
-                    ),
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 15.w,
+                        height: 20.h,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.error, color: Colors.grey),
+                      );
+                    },
                   )
                 : Container(
                     width: 15.w,
@@ -62,15 +63,15 @@ class BookCard extends StatelessWidget {
                   ),
           ),
           SizedBox(width: 4.w),
-          // Book details
+          // Book details + Heart button
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Title: ${doc.title ?? 'Unknown Title'}',
-                  style: GoogleFonts.notoSansAnatolianHieroglyphs(
-                    fontSize: 14.sp,
+                  doc.title ?? 'Unknown Title',
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
@@ -80,14 +81,33 @@ class BookCard extends StatelessWidget {
                 SizedBox(height: 1.h),
                 if (doc.authorName != null && doc.authorName!.isNotEmpty)
                   Text(
-                    'Author Name : ${doc.authorName!.join(', ')}',
-                    style: GoogleFonts.notoSansAnatolianHieroglyphs(
-                      fontSize: 14.sp,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 3,
+                    'Author: ${doc.authorName!.join(', ')}',
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                SizedBox(height: 1.h),
+                // Heart button
+                Row(
+                  children: [
+                    Consumer<BookProvider>(
+                      builder: (context, provider, child) {
+                        return IconButton(
+                          icon: Icon(
+                            doc.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: doc.isFavorite ? Colors.red : Colors.grey,
+                            size: 22.sp,
+                          ),
+                          onPressed: () {
+                            provider.toggleFavorite(doc);
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
