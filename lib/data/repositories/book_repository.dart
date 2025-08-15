@@ -7,11 +7,9 @@ class BookRepository {
   final BookApiService _apiService;
   final DatabaseService _databaseService;
 
-  BookRepository({
-    BookApiService? apiService,
-    DatabaseService? databaseService,
-  }) : _apiService = apiService ?? BookApiService(),
-       _databaseService = databaseService ?? DatabaseService();
+  BookRepository({BookApiService? apiService, DatabaseService? databaseService})
+    : _apiService = apiService ?? BookApiService(),
+      _databaseService = databaseService ?? DatabaseService();
 
   Future<Book> fetchBooks(String query, {int page = 1, int limit = 20}) async {
     try {

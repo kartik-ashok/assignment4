@@ -42,7 +42,7 @@ dependencies:
   provider: ^6.1.1
   
   # Responsive Design
-  sizer: ^2.0.15
+  sizer: ^3.0.5
   
   # Local Database
   sqflite: ^2.3.0

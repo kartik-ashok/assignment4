@@ -10,12 +10,8 @@ class BookApiService {
     try {
       final response = await http.get(
         Uri.parse(
-          // 'https://openlibrary.org/search.json?q=the&limit=20&fields=title,author_name,cover_i,key',
-          'https://openlibrary.org/search.json?q=the&fields=title,author_name,cover_i,key',
+          '$_baseUrl/search.json?q=${Uri.encodeComponent(query)}&page=$page&limit=$limit&fields=title,author_name,cover_i,key',
         ),
-        // Uri.parse(
-        //   '$_baseUrl/search.json?q=${Uri.encodeComponent(query)}&page=$page&limit=$limit&fields=title,author_name,cover_i',
-        // ),
         headers: {'Content-Type': 'application/json'},
       );
 
