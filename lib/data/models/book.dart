@@ -57,8 +57,8 @@ class BookDoc {
     this.olid,
     this.isFavorite = false,
   }) : coverImage = coverI != null
-          ? 'https://covers.openlibrary.org/b/id/$coverI-M.jpg'
-          : null;
+           ? 'https://covers.openlibrary.org/b/id/$coverI-M.jpg'
+           : null;
 
   factory BookDoc.fromJson(Map<String, dynamic> json) {
     return BookDoc(
@@ -75,9 +75,7 @@ class BookDoc {
   factory BookDoc.fromDb(Map<String, dynamic> json) {
     return BookDoc(
       title: json['title'],
-      authorName: json['author_name'] != null
-          ? [json['author_name']]
-          : null,
+      authorName: json['author_name'] != null ? [json['author_name']] : null,
       coverI: json['cover_i'],
       key: json['book_key'],
       olid: json['olid'],
